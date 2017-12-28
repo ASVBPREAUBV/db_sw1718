@@ -2,29 +2,51 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
-	"math/rand"
+	"encoding/csv"
+	"strings"
+	"io"
+	"fmt"
+	"io/ioutil"
 )
+
+func check(e error) {
+	if e != nil {
+		log.Printf("%q: %s\n", e)
+
+		panic(e)
+	}
+}
 
 func main() {
 	os.Remove("./foo.db")
 
 	db, err := sql.Open("sqlite3", "./foo.db")
-	if err != nil {
-		log.Fatal(err)
-	}
+	check(err)
 	defer db.Close()
 
 
 	//sqlStmt := "create table foo (id integer not null primary key, name text);"
-	sqlStmt := "create table t (tnr text not null primary key, name text);"
+	sqlStmt := "create table t (tnr text not null primary key, tname text, farbe text, gewicht integer);"
 	_, err = db.Exec(sqlStmt)
-	if err != nil {
-		log.Printf("%q: %s\n", err, sqlStmt)
-		return
+	check(err)
+
+	dat, err := ioutil.ReadFile("./csv/t.csv")
+	check(err)
+	//fmt.Print(string(dat))
+
+	r := csv.NewReader(strings.NewReader(string(dat)))
+
+	for {
+		record, err := r.Read()
+		check(err)
+
+		//fmt.Println(record)
+		sqlInsertStmt := "create table t (tnr text not null primary key, tname text, farbe text, gewicht integer);"
+		_, err = db.Exec(sqlStmt)
+		check(err)
 	}
 
 
