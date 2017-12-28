@@ -41,10 +41,7 @@ func main() {
 
 	data_t, err := ioutil.ReadFile("./csv/T.csv")
 	check(err)
-	//fmt.Print(string(dat))
-
 	r_t := csv.NewReader(strings.NewReader(string(data_t)))
-
 	for {
 		record, err := r_t.Read()
 		if err == io.EOF {
@@ -131,11 +128,13 @@ func main() {
 
 	}
 
+	//QUERIES
 
-
-
-
-
+	//(a) Bestimme die Namen aller Projekte in Berlin.
+	//(b) Bestimme fur jedes Projekt in Berlin die Namen aller gelieferten Teile. ¨
+	//(c) Finde die Namen und Nummern aller Teile, die Lieferant Schulz liefert.
+	//(d) Bestimme die Namen aller Lieferanten, die von Meschede nach Wetter liefern.
+	//(e) Bestimme die Nummern und Orte aller Projekte, zu denen ein rotes Teil mit einem Gewicht von mehr als 5 geliefert wird.
 
 
 	/*
