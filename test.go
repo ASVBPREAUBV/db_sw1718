@@ -7,9 +7,9 @@ import (
 	"os"
 	"encoding/csv"
 	"strings"
-	"io"
-	"fmt"
 	"io/ioutil"
+	"fmt"
+	"reflect"
 )
 
 func check(e error) {
@@ -27,6 +27,9 @@ func main() {
 	check(err)
 	defer db.Close()
 
+	err = db.Ping()
+	check(err)
+
 
 	//sqlStmt := "create table foo (id integer not null primary key, name text);"
 	sqlStmt := "create table t (tnr text not null primary key, tname text, farbe text, gewicht integer);"
@@ -43,9 +46,9 @@ func main() {
 		record, err := r.Read()
 		check(err)
 
-		//fmt.Println(record)
-		sqlInsertStmt := "create table t (tnr text not null primary key, tname text, farbe text, gewicht integer);"
-		_, err = db.Exec(sqlStmt)
+		fmt.Println(reflect.TypeOf(record))
+		sqlInsertStmt := "insert into t(gewicht) values(15); "
+		_, err = db.Exec(sqlInsertStmt)
 		check(err)
 	}
 
@@ -53,82 +56,82 @@ func main() {
 
 
 
-/*
-	tx, err := db.Begin()
-	if err != nil {
-		log.Fatal(err)
-	}
-	stmt, err := tx.Prepare("insert into foo(id, name) values(?, ?)")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer stmt.Close()
-	for i := 0; i < rand.Intn(99); i++ {
-		_, err = stmt.Exec(i, fmt.Sprintf("Zahl%03d", i))
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-	tx.Commit()
-
 	/*
-		rows, err := db.Query("select id, name from foo")
+		tx, err := db.Begin()
 		if err != nil {
 			log.Fatal(err)
 		}
-		defer rows.Close()
-		for rows.Next() {
-			var id int
-			var name string
-			err = rows.Scan(&id, &name)
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Println(id, name)
-		}
-		err = rows.Err()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		stmt, err = db.Prepare("select name from foo where id = ?")
+		stmt, err := tx.Prepare("insert into foo(id, name) values(?, ?)")
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer stmt.Close()
-		var name string
-		err = stmt.QueryRow("3").Scan(&name)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(name)
-
-		_, err = db.Exec("delete from foo")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		_, err = db.Exec("insert into foo(id, name) values(1, 'foo'), (2, 'bar'), (3, 'baz')")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		rows, err = db.Query("select id, name from foo")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer rows.Close()
-		for rows.Next() {
-			var id int
-			var name string
-			err = rows.Scan(&id, &name)
+		for i := 0; i < rand.Intn(99); i++ {
+			_, err = stmt.Exec(i, fmt.Sprintf("Zahl%03d", i))
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println(id, name)
 		}
-		err = rows.Err()
-		if err != nil {
-			log.Fatal(err)
-		}*/
+		tx.Commit()
+
+		/*
+			rows, err := db.Query("select id, name from foo")
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer rows.Close()
+			for rows.Next() {
+				var id int
+				var name string
+				err = rows.Scan(&id, &name)
+				if err != nil {
+					log.Fatal(err)
+				}
+				fmt.Println(id, name)
+			}
+			err = rows.Err()
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			stmt, err = db.Prepare("select name from foo where id = ?")
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer stmt.Close()
+			var name string
+			err = stmt.QueryRow("3").Scan(&name)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(name)
+
+			_, err = db.Exec("delete from foo")
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			_, err = db.Exec("insert into foo(id, name) values(1, 'foo'), (2, 'bar'), (3, 'baz')")
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			rows, err = db.Query("select id, name from foo")
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer rows.Close()
+			for rows.Next() {
+				var id int
+				var name string
+				err = rows.Scan(&id, &name)
+				if err != nil {
+					log.Fatal(err)
+				}
+				fmt.Println(id, name)
+			}
+			err = rows.Err()
+			if err != nil {
+				log.Fatal(err)
+			}*/
 }
