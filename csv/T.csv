@@ -1,6 +1,6 @@
-'T1','Stecker','Rot',15
-'T2','Kabel','Blau',27
-'T3','Schalter','Weiss',05
-'T4','8080','Rot',02
-'T5','Diskette','Blau',12
-'T6','Schraube','rot',03
+T1,Stecker,Rot,15
+T2,Kabel,Blau,27
+T3,Schalter,Weiss,05
+T4,8080,Rot,02
+T5,Diskette,Blau,12
+T6,Schraube,rot,03

@@ -9,13 +9,12 @@ import (
 	"strings"
 	"io/ioutil"
 	"fmt"
-	"reflect"
+	"io"
 )
 
 func check(e error) {
 	if e != nil {
 		log.Printf("%q: %s\n", e)
-
 		panic(e)
 	}
 }
@@ -32,11 +31,11 @@ func main() {
 
 
 	//sqlStmt := "create table foo (id integer not null primary key, name text);"
-	sqlStmt := "create table t (tnr text not null primary key, tname text, farbe text, gewicht integer);"
+	sqlStmt := "CREATE TABLE t (tnr TEXT NOT NULL PRIMARY KEY, tname TEXT, farbe TEXT, gewicht INTEGER);"
 	_, err = db.Exec(sqlStmt)
 	check(err)
 
-	dat, err := ioutil.ReadFile("./csv/t.csv")
+	dat, err := ioutil.ReadFile("./csv/T.csv")
 	check(err)
 	//fmt.Print(string(dat))
 
@@ -44,13 +43,22 @@ func main() {
 
 	for {
 		record, err := r.Read()
+		if err == io.EOF {
+			break
+		}
 		check(err)
 
-		fmt.Println(reflect.TypeOf(record))
-		sqlInsertStmt := "insert into t(gewicht) values(15); "
-		_, err = db.Exec(sqlInsertStmt)
+		//fmt.Println(reflect.TypeOf(record))
+		//fmt.Println("RecordRow ", record)
+
+		stmt, err := db.Prepare("INSERT INTO t(tnr) VALUES(?)")
 		check(err)
+
+		stmt.Exec(record[0])
+
 	}
+
+
 
 
 
