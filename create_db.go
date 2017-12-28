@@ -12,12 +12,6 @@ import (
 	"fmt"
 )
 
-func check(e error) {
-	if e != nil {
-		log.Printf("%q: %s\n", e)
-		panic(e)
-	}
-}
 
 func main() {
 	os.Remove("./foo.db")
@@ -96,7 +90,7 @@ func main() {
 		check(err)
 
 		//fmt.Println(reflect.TypeOf(record))
-		fmt.Println("RecordRow ", record)
+		//fmt.Println("RecordRow ", record)
 
 		stmt, err := db.Prepare("INSERT INTO p(pnr,pname,ort) VALUES(?,?,?)")
 		check(err)
@@ -119,7 +113,7 @@ func main() {
 		check(err)
 
 		//fmt.Println(reflect.TypeOf(record))
-		fmt.Println("RecordRow ", record)
+		//fmt.Println("RecordRow ", record)
 
 		stmt, err := db.Prepare("INSERT INTO ltp(tnr,lnr,pnr,menge) VALUES(?,?,?,?)")
 		check(err)
@@ -127,92 +121,4 @@ func main() {
 		stmt.Exec(record[0], record[1], record[2], record[3])
 
 	}
-
-	//QUERIES
-
-	//(a) Bestimme die Namen aller Projekte in Berlin.
-	//(b) Bestimme fur jedes Projekt in Berlin die Namen aller gelieferten Teile. ¨
-	//(c) Finde die Namen und Nummern aller Teile, die Lieferant Schulz liefert.
-	//(d) Bestimme die Namen aller Lieferanten, die von Meschede nach Wetter liefern.
-	//(e) Bestimme die Nummern und Orte aller Projekte, zu denen ein rotes Teil mit einem Gewicht von mehr als 5 geliefert wird.
-
-
-	/*
-		tx, err := db.Begin()
-		if err != nil {
-			log.Fatal(err)
-		}
-		stmt, err := tx.Prepare("insert into foo(id, name) values(?, ?)")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer stmt.Close()
-		for i := 0; i < rand.Intn(99); i++ {
-			_, err = stmt.Exec(i, fmt.Sprintf("Zahl%03d", i))
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-		tx.Commit()
-
-		/*
-			rows, err := db.Query("select id, name from foo")
-			if err != nil {
-				log.Fatal(err)
-			}
-			defer rows.Close()
-			for rows.Next() {
-				var id int
-				var name string
-				err = rows.Scan(&id, &name)
-				if err != nil {
-					log.Fatal(err)
-				}
-				fmt.Println(id, name)
-			}
-			err = rows.Err()
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			stmt, err = db.Prepare("select name from foo where id = ?")
-			if err != nil {
-				log.Fatal(err)
-			}
-			defer stmt.Close()
-			var name string
-			err = stmt.QueryRow("3").Scan(&name)
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Println(name)
-
-			_, err = db.Exec("delete from foo")
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			_, err = db.Exec("insert into foo(id, name) values(1, 'foo'), (2, 'bar'), (3, 'baz')")
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			rows, err = db.Query("select id, name from foo")
-			if err != nil {
-				log.Fatal(err)
-			}
-			defer rows.Close()
-			for rows.Next() {
-				var id int
-				var name string
-				err = rows.Scan(&id, &name)
-				if err != nil {
-					log.Fatal(err)
-				}
-				fmt.Println(id, name)
-			}
-			err = rows.Err()
-			if err != nil {
-				log.Fatal(err)
-			}*/
 }
