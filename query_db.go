@@ -27,22 +27,46 @@ func main() {
 
 	//QUERIES
 	var (
-		test string
+		pname string
 	)
 
 	//(a) Bestimme die Namen aller Projekte in Berlin.
-	rows, err := db.Query("SELECT ort from p where ort = ?", "Berlin")
+	rows_a, err := db.Query("SELECT pname FROM p WHERE ort = ?", "Berlin")
 	check(err)
-	defer rows.Close()
-	for rows.Next() {
-		err := rows.Scan(test)
+	defer rows_a.Close()
+	for rows_a.Next() {
+		err := rows_a.Scan(&pname)
 		check(err)
-		fmt.Println(test)
+		fmt.Println("(a)", pname)
 	}
-	err = rows.Err()
+	err = rows_a.Err()
 	check(err)
 
-	//(b) Bestimme fur jedes Projekt in Berlin die Namen aller gelieferten Teile. ¨
+
+	//(b) Bestimme fur jedes Projekt in Berlin die Namen aller gelieferten Teile.
+
+	var (
+		tnr string
+		tname string
+		farbe string
+		gewicht int
+	)
+
+	var query_b = "SELECT * " +
+		"FROM t "
+	//+"JOIN ltp ON t.tnr=ltp.tnr"
+
+	rows_b, err := db.Query(query_b, "Berlin")
+	check(err)
+	defer rows_b.Close()
+	for rows_b.Next() {
+		err := rows_b.Scan(&tnr, &tname, &farbe, &gewicht)
+		check(err)
+		fmt.Println("(b)", tnr, tname, farbe, gewicht)
+	}
+	err = rows_b.Err()
+	check(err)
+
 	//(c) Finde die Namen und Nummern aller Teile, die Lieferant Schulz liefert.
 	//(d) Bestimme die Namen aller Lieferanten, die von Meschede nach Wetter liefern.
 	//(e) Bestimme die Nummern und Orte aller Projekte, zu denen ein rotes Teil mit einem Gewicht von mehr als 5 geliefert wird.
