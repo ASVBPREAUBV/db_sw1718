@@ -18,6 +18,7 @@ func about_handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", index_handler)
 	http.HandleFunc("/about", about_handler)
+	fmt.Println("Starting Server...")
 	http.ListenAndServe(":8000", nil)
 }
 
